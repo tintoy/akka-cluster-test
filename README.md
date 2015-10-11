@@ -1,4 +1,5 @@
 # Akka cluster test
 
-I've been seeing some weird and counter-intuitive behaviour when working with Akka.NET and clustered broadcast groups. This stuff is still a lot quicker to try out in Scala (and that's coming from someone who's barely used it) so here we are. It works as expected. Now to see if I can translate this back into an Akka.NET version :-)
+I've created 2 simple implementations (both as similar as possible) in both [Akka.NET](https://github.com/tintoy/akkadotnet-cluster-test) and [Akka native (scala)](https://github.com/tintoy/akkadotnet-cluster-test).
 
+The native one works, but I can't figure out why the .NET one doesn't.
