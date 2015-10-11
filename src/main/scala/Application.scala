@@ -1,4 +1,3 @@
-import com.typesafe.config.{ConfigFactory, Config}
 import concurrent.Await
 import concurrent.duration._
 import io.StdIn
@@ -7,19 +6,16 @@ import io.StdIn
  * The main application entry-point.
  */
 object Application extends App {
-  val appConfig: Config = ConfigFactory.defaultApplication()
-  val commonConfig = appConfig.getConfig("common")
-  val node1Config = appConfig.getConfig("node1").withFallback(commonConfig)
-  val node2Config = appConfig.getConfig("node2").withFallback(commonConfig)
-
-  val clusterNode1 = ClusterNodes.startNode(node1Config)
-  val clusterNode2 = ClusterNodes.startNode(node2Config)
+  val clusterNode1 = ClusterBuilder.startNode(1)
+  val clusterNode2 = ClusterBuilder.startNode(2)
+  val clusterNode3 = ClusterBuilder.startNode(3)
 
   println("Press enter to terminate.")
   StdIn.readLine
 
   clusterNode1.terminate()
   clusterNode2.terminate()
+  clusterNode3.terminate()
 
   // AF: Task.WhenAll is still a little simpler.
   implicit val executionContext = concurrent.ExecutionContext.global
@@ -27,7 +23,8 @@ object Application extends App {
     for {
       node1Terminated <- clusterNode1.whenTerminated
       node2Terminated <- clusterNode2.whenTerminated
-    } yield 0,
+      node3Terminated <- clusterNode3.whenTerminated
+    } yield (node1Terminated, node2Terminated, node3Terminated),
     5.seconds
   )
 }
