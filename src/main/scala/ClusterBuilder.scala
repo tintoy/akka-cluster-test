@@ -34,7 +34,7 @@ object ClusterBuilder {
       "broadcaster"
     )
 
-    //
+    // The BrokenRecord actor periodically emits messages for broadcast.
     clusterNode.actorOf(
       Props(classOf[BrokenRecord], nodeId),
       "broken-record"
